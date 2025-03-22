@@ -1,3 +1,5 @@
+/*Implementar comunicação bidirecional via FIFO nomeado (servidor e cliente).*/
+
 ////////////////////////////////////writer ///////////////////////
 #include <stdio.h>
 #include <string.h>

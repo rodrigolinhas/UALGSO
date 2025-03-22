@@ -1,3 +1,5 @@
+/*Comunicação básica entre pai e filho via pipe, com entrada de dados.*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,41 +10,28 @@
 
 int main(int argc, char* argv[]) {
     int fd[2];
-    if (pipe(fd) == -1) {
-        printf("An error ocurred with opening the pipe\n");
+    if (pipe(fd) == -1) { // Cria pipe
+        printf("Pipe error\n");
         return 1;
     }
+    int id = fork(); // Cria filho
+    if (id == -1) return 2;
     
-    int id = fork();
-    if (id == -1) {
-        printf("An error ocurred with fork\n");
-        return 2;
-    }
-    
+    // Filho
     if (id == 0) {
-        // Child process
-        close(fd[0]);
+        close(fd[0]); // Fecha leitura
         int x;
         printf("Input a number: ");
-        scanf("%d", &x);
-        if (write(fd[1], &x, sizeof(int)) == -1) {
-            printf("An error ocurred with writing to the pipe\n");
-            return 3;
-        }
+        scanf("%d", &x); // Lê entrada do usuário
+        write(fd[1], &x, sizeof(int)); // Envia para o pai
         close(fd[1]);
-    } else {
-        // Parent process
-        close(fd[1]);
+    } else { // Pai
+        close(fd[1]); // Fecha escrita
         int y;
-        if (read(fd[0], &y, sizeof(int)) == -1) {
-            printf("An error ocurred with reading from the pipe\n");
-            return 4;
-        }
-        printf("Got from child process %d\n", y);
-        y = y * 3;
-        printf("Result is %d\n", y);
+        read(fd[0], &y, sizeof(int)); // Recebe do filho
+        printf("Got from child: %d\n", y);
+        printf("Result: %d\n", y * 3); // Processa dado
         close(fd[0]);
     }
-    
     return 0;
 }

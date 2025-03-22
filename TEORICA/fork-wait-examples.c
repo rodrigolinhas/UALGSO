@@ -1,79 +1,64 @@
+/*Exemplo básico de fork*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
 #include <sys/types.h>
-int main(){
-pid_t p1, p2;
-p1 = fork();
-printf("Hello\n");
-p2 = fork();
-printf("Hello\n");
+int main(void){
+    pid_t p1, p2;
+    p1 = fork(); // Primeiro fork: 2 processos
+    printf("Hello\n"); // Executado por ambos
+    p2 = fork(); // Segundo fork: 4 processos
+    printf("Hello\n"); // Executado por todos
 }
+// Saída: 4 "Hello" no total.
+
 /////////////////////////////////////////////
+/*Três forks (8 processos)*/
 #include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
-int main()
-{
-    fork();
-    fork();
-    fork();
-    printf("hello\n");
+int main(void) {
+    fork(); // 2 processos
+    fork(); // 4 processos
+    fork(); // 8 processos
+    printf("hello\n"); // Todos imprimem
     return 0;
 }
 /////////////////////////////////////////////
+/*Sincronização com wait*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <sys/wait.h>
-void forkexample()
-{
-    pid_t p;
-    p = fork();
-    if(p<0)
-    {
-      perror("fork fail");
-      exit(1);
-    }
-    // child process because return value zero
-    else if ( p == 0) {
-        sleep (10);
+void forkexample() {
+    pid_t p = fork();
+    if(p < 0) exit(1);
+    else if (p == 0) {
+        sleep(10); // Filho dorme 10s
         printf("Hello from Child!\n");
-        }
-        
- wait (NULL);
-    // parent process because return value non-zero.
-   // else
-   //     printf("Hello from Parent!\n");
+    }
+    else wait(NULL); // Pai espera o filho
 }
-int main()
-{
+int main(void) {
     forkexample();
     return 0;
 }
 /////////////////////////////////////////////
+/*Variáveis independentes entre processos*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
- 
-void forkexample()
-{
+void forkexample() {
     int x = 1;
     pid_t p = fork();
-      if(p<0){
-      perror("fork fail");
-      exit(1);
-    }
-   else if (p == 0)
-        printf("Child has x = %d\n", ++x);
-   else 
-        printf("Parent has x = %d\n", --x);
+    if(p < 0) exit(1);
+    else if (p == 0)    printf("Child x = %d\n", ++x); // x = 2
+    else                printf("Parent x = %d\n", --x); // x = 0
 }
-int main()
-{
+int main(void) {
     forkexample();
     return 0;
 }

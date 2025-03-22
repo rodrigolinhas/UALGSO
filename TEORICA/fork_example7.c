@@ -6,21 +6,21 @@
 #include <unistd.h>
 
 int main(int argc, char* argv[]) {
-    pid_t id = fork();
+    pid_t id = fork(); // Cria processo filho
     int n;
-    if (id == 0) {
-        n = 1;
-    } else {
-        n = 6;
-    }
     
-    if (id != 0){
-        wait(NULL);
+    // Processo Filho
+    if (id == 0)    n = 1; // Imprimirá 1-5
+    
+    // Processo Pai
+    else            n = 6; // Imprimirá 6-10
+    
+    // Apenas o pai espera
+    if (id != 0)    wait(NULL); // Garante que o filho termine primeiro
+    
+    // Ambos os processos executam este loop:
+    for (int i = n; i < n + 5; i++) {
+        printf("%d ", i); // Saída ordenada: filho (1-5) primeiro, depois pai (6-10)
     }
-    int i;
-    for (i = n; i < n + 5; i++) {
-        printf("%d ", i);
-    }
-  
     return 0;
 }

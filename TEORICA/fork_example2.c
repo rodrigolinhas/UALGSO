@@ -3,28 +3,25 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <sys/wait.h>
-void forkexample()
-{
+
+void forkexample() {
     pid_t p;
-    p = fork();
-    if(p<0)
-    {
-      perror("fork fail");
-      exit(1);
+    p = fork(); // Cria processo filho
+    //error handler
+    if(p < 0) {
+        perror("fork fail");
+        exit(1);
     }
-    // child process because return value zero
+    // Processo Filho
     else if ( p == 0) {
-        sleep (10);
-        printf("Hello from Child!\n");
-        }
-        
- wait (NULL);
-    // parent process because return value non-zero.
-   // else
-   //     printf("Hello from Parent!\n");
+        sleep(10); // Dorme por 10 segundos
+        printf("Hello from Child!\n"); // Imprime após acordar
+    }
+    // Processo Pai
+    wait (NULL); // Espera o filho terminar
 }
-int main()
-{
+
+int main(void) {
     forkexample();
     return 0;
 }
