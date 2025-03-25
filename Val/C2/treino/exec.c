@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
+#include <string.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 #include <sys/types.h>
+#include <unistd.h>
 #include <sys/wait.h>
+#include <errno.h>
 
 int main(int argc, char* argv[])
 {
@@ -11,15 +14,13 @@ int main(int argc, char* argv[])
 
     if (pid == 0)
     {
-        char *args[] = {"ls", "-l", NULL};
-        execvp("ls", args);
-        perror("erro execvp");
-        exit(EXIT_FAILURE);
+        execlp("ls", "ls", "-l", NULL);
+        exit(1);
     }
     else
     {
         wait(NULL);
-        printf("COMANDO EXECUTADO!\n");
+        printf("Processo pai a terminar tudo.\n");
     }
 
     return 0;
