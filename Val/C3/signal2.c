@@ -13,19 +13,13 @@ O pai espera a resposta do usuário para uma pergunta matemática e exibe uma di
 
 int x; // Variável global para acesso pelo handler  
 
-struct sigaction sa {
-    void        (*sa_handler)(int);
-    void        (*sa_sigaction)(int, siginfo_t *, void *);
-    sigset_t    sa_mask;
-    int         sa_flags;
-    void        (*sa_restorer)(void);
-}
 
 void handle_sigusr(int sig) {  
     printf("\n(HINT) Remember that multiplication is repetitive addition!\n");  
 }  
 
 int main(int argc, char* argv[]) {  
+    
     int pid = fork();  
     if (pid == -1) {  
         return 1;  
@@ -37,7 +31,7 @@ int main(int argc, char* argv[]) {
         kill(getppid(), SIGUSR1);  
     } else {  
         // Parent process  
-        //struct sigaction sa; 
+        struct sigaction sa; 
         sa.sa_flags = SA_RESTART;  
         sa.sa_handler = &handle_sigusr;  
         sigaction(SIGUSR1, &sa, NULL);  
