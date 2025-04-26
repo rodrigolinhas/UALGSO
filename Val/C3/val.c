@@ -8,6 +8,7 @@ thread 1: i
 thread 2: n
 thread 1: e
 mutex para não haver race condition
+Pergunta da val: agora o codigo imprime de palavra a palavra
 */
 
 #include <stdio.h>
@@ -36,7 +37,7 @@ void *thread1_func() {
         if (current_index % 2 == 0) {
             printf("thread 1: %c\n", str[current_index]);
             current_index++;
-sleep(1);
+	    sleep(1);
         }
         pthread_mutex_unlock(&mutex);
     }
@@ -52,7 +53,7 @@ void *thread2_func() {
         if (current_index % 2 == 1) {
             printf("thread 2: %c\n", str[current_index]);
             current_index++;
-sleep(1);
+	    sleep(1);
         }
         pthread_mutex_unlock(&mutex);
     }
