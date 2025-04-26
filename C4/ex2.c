@@ -13,7 +13,8 @@ sem_t mutex;
 sem_t self[N];
 
 void test(int i) {
-    if (state[i] == HUNGRY && state[(i+4)%N] != EATING && state[(i+1)%N] != EATING) {
+    if (state[i] == HUNGRY && state[(i+4)%N] != EATING 
+            && state[(i+1)%N] != EATING) {
         state[i] = EATING;
         sem_post(&self[i]);
     }
@@ -45,6 +46,7 @@ void *philosopher(void *num) {
         printf("Filósofo nº %d comendo\n", i+1);
         sleep(1);
         put_forks(i);
+        printf("Filósofo nº %d parou de comer\n", i+1);
     }
 }
 
@@ -64,3 +66,4 @@ int main(void) {
     }
     return 0;
 }
+
